@@ -1,10 +1,12 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 // 导入自定义库
 const user =require( './user');
 
 const app = express();
-app.use(bodyParser.json());// 使用JSON body parser
+app.use(bodyParser.json());// 使用JSON body parser中间件
+app.use(cookieParser()); // 使用cookie-parser中间件
 app.use('/user', user);
 const server = app.listen(3030, '127.0.0.1', () => {
     const host = server.address().address;

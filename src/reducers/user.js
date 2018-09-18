@@ -1,21 +1,51 @@
-// Reducer
-import {REGISTER_SUCCESS} from '../actions/actions';
+// Reducer: user
+import {
+    REGISTER_SUCCESS,
+    LOGIN_SUCCESS,
+    LOAD_INFO,
+    ERR_MSG
+} from '../actions/actions';
+import {getRedirectPath} from '../common/js/util';
 
 const initState = {
+    redirectPath: '',
     isAuth: false,
     username: '',
-    type: ''
+    type: '',
+    msg: ''
 };
 
 const user = (state=initState, action)=> {
     switch (action.type){
         case REGISTER_SUCCESS:
-            return {...state, isAuth: true, ...action.info};
-            // return {...state,
-            //     isAuth: true,
-            //     username: action.info.username,
-            //     type: action.info.type,
-            // };
+            return {
+                ...state,
+                isAuth: true,
+                msg: '',
+                redirectPath: getRedirectPath(action.info),
+                ...action.info
+            };
+        case LOGIN_SUCCESS:
+            return {
+                ...state,
+                isAuth: true,
+                msg: '',
+                redirectPath: getRedirectPath(action.info),
+                ...action.info
+            };
+        case LOAD_INFO:
+            return {
+                ...state,
+                isAuth: true,
+                msg: '',
+                ...action.info
+            };
+        case ERR_MSG:
+            return {
+                ...state,
+                isAuth: false,
+                msg: action.msg
+            };
         default:
             return state;
     }

@@ -9,6 +9,8 @@ const models = {
         username: {type: String, required: true},
         pwd: {type: String, required: true},
         type: {type: String, required: true},
+        //头像
+        avatar:{'type':String},
     },
     chat: {},
 };

@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {WingBlank, Button, WhiteSpace, List, InputItem, Radio} from 'antd-mobile';
 // import md5 from 'md5';// 无效
 import {connect} from 'react-redux';
+import {Redirect} from 'react-router-dom';
 // 导入自定义库
 import Logo from '../../components/logo/logo';
 import {register} from '../../actions/actions';
@@ -52,6 +53,7 @@ class Register extends Component {
     render() {
         return (
             <div>
+                {this.props.redirectPath?<Redirect to={this.props.redirectPath} />:null}
                 <Logo />
                 <WingBlank>
                     <List>
@@ -85,9 +87,14 @@ class Register extends Component {
         );
     }
 }
+const mapStateToProps = state => {
+    return {
+        redirectPath: state.user.redirectPath
+    }
+};
 const mapDispatchToProps = dispatch => {
     return {
         register: info => dispatch(register(info))
     }
 };
-export default connect(null, mapDispatchToProps)(Register);
+export default connect(mapStateToProps, mapDispatchToProps)(Register);
