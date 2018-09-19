@@ -9,8 +9,15 @@ const models = {
         username: {type: String, required: true},
         pwd: {type: String, required: true},
         type: {type: String, required: true},
-        //头像
-        avatar:{'type':String},
+        // 头像
+        avatar:{type: String},
+        // 个人简介或职位简介
+        desc: {type: String},
+        // 职位名
+        title: {type: String},
+        // BOSS额外的两个字段
+        company: {type: String},
+        salary: {type: String}
     },
     chat: {},
 };

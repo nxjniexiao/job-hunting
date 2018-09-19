@@ -1,7 +1,6 @@
 // Reducer: user
 import {
-    REGISTER_SUCCESS,
-    LOGIN_SUCCESS,
+    AUTH_SUCCESS,
     LOAD_INFO,
     ERR_MSG
 } from '../actions/actions';
@@ -17,15 +16,7 @@ const initState = {
 
 const user = (state=initState, action)=> {
     switch (action.type){
-        case REGISTER_SUCCESS:
-            return {
-                ...state,
-                isAuth: true,
-                msg: '',
-                redirectPath: getRedirectPath(action.info),
-                ...action.info
-            };
-        case LOGIN_SUCCESS:
+        case AUTH_SUCCESS:
             return {
                 ...state,
                 isAuth: true,

@@ -68,18 +68,16 @@ class Register extends Component {
                             type="password"
                             onChange={v=>this.handleChange('repeatPwd',v)}
                         >确认密码</InputItem>
+                        <WhiteSpace/>
+                        <RadioItem
+                            checked={this.state.type === "boss"}
+                            onChange={()=>this.handleChange('type',"boss")}
+                        >老板</RadioItem>
+                        <RadioItem
+                            checked={this.state.type === "genius"}
+                            onChange={()=>this.handleChange('type',"genius")}
+                        >牛人</RadioItem>
                     </List>
-                    <WhiteSpace/>
-                    <RadioItem
-                        checked={this.state.type === "boss"}
-                        // onChange={this.typeSelected('boss')}
-                        onClick={()=>this.handleChange('type',"boss")}
-                    >老板</RadioItem>
-                    <RadioItem
-                        checked={this.state.type === "genius"}
-                        // onChange={this.typeSelected('genius')}
-                        onClick={()=>this.handleChange('type',"genius")}
-                    >牛人</RadioItem>
                     <WhiteSpace/>
                     <Button type="primary" onClick={this.handleRegister}>注册</Button>
                 </WingBlank>
