@@ -4,7 +4,7 @@ import {createStore, applyMiddleware} from 'redux';
 import {Provider} from 'react-redux';
 import thunk from 'redux-thunk';
 import {createLogger} from 'redux-logger';
-import {BrowserRouter as Router, Route} from 'react-router-dom';
+import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 
 // 导入自定义模块
 import rootReducers from './reducers';
@@ -13,7 +13,7 @@ import Register from './containers/register/register';
 import AuthRoute from './components/authroute/authroute';
 import BossInfo from './containers/boss-info/boss-info';
 import GeniusInfo from './containers/genius-info/genius-info';
-
+import Dashboard from './components/dashboard/dashboard';
 
 const loggerMiddleware = createLogger();// 用来打印 action 日志
 const store = createStore(
@@ -29,10 +29,13 @@ ReactDOM.render(
         <Router>
             <div>
                 <AuthRoute/>
-                <Route path="/boss-info" component={BossInfo}/>
-                <Route path="/genius-info" component={GeniusInfo}/>
-                <Route path="/login" component={Login} />
-                <Route path="/register" component={Register} />
+                <Switch>
+                    <Route path="/boss-info" component={BossInfo}/>
+                    <Route path="/genius-info" component={GeniusInfo}/>
+                    <Route path="/login" component={Login} />
+                    <Route path="/register" component={Register} />
+                    <Route component={Dashboard} />
+                </Switch>
             </div>
         </Router>
     </Provider>),

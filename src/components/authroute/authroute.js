@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import axios from 'axios';
 import {withRouter} from 'react-router-dom';// 访问react-router的history对象
 // 引入自定义库
-import {loadInfo} from '../../actions/actions';
+import {loadInfo} from '../../actions/actions-user';
 
 class AuthRoute extends Component {
     componentDidMount() {

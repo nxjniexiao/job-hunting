@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import {Redirect} from 'react-router-dom';
 // 导入自定义库
 import Logo from '../../components/logo/logo';
-import {login} from "../../actions/actions";
+import {login} from "../../actions/actions-user";
 
 const md5 = require('md5');
 

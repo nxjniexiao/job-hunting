@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 import {Redirect} from 'react-router-dom';
 // 导入自定义库
 import Logo from '../../components/logo/logo';
-import {register} from '../../actions/actions';
+import {register} from '../../actions/actions-user';
 
 const RadioItem = Radio.RadioItem;
 class Register extends Component {

@@ -3,7 +3,7 @@ import {
     AUTH_SUCCESS,
     LOAD_INFO,
     ERR_MSG
-} from '../actions/actions';
+} from '../actions/actions-user';
 import {getRedirectPath} from '../common/js/util';
 
 const initState = {

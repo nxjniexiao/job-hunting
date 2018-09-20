@@ -22,7 +22,7 @@ router.post('/register', (req, res) => {
             }
             // console.log(product);// {_id: 5b9f..., username: 'nie',...}
             // 向前端返回cookie
-            res.cookie("_id", product._id, {maxAge: 10*60*1000});
+            res.cookie("_id", product._id, {maxAge: 60*60*1000});
             product.pwd = null;
             res.json({code: 0, info: product});
         });
@@ -34,7 +34,7 @@ router.post('/login', (req, res) => {
     User.findOne({username, pwd}, (err, doc) => {
         if(doc){
             // 向前端返回cookie
-            res.cookie("_id", doc._id, {maxAge: 10*60*1000});
+            res.cookie("_id", doc._id, {maxAge: 60*60*1000});
             // 登陆成功
             doc.pwd = null;
             res.json({code: 0, info: doc});
@@ -81,14 +81,50 @@ router.get('/info', (req, res) => {
                 res.json({code: 1, msg: '后端错误！'});
                 return;
             }
-            if(doc){
+            if(doc) {
                 // 找到与_id对应的用户信息
+                doc.pwd = null;
                 res.json({code: 0, info: doc});
+            } else {
+                // 未找到与_id对应的用户信息
+                res.clearCookie('_id');// 删除cookie
+                res.json({code: 1, msg: '未找到跟_id对应的用户信息'});
+            }
+        })
+    } else {
+        // cookies不存在
+        res.json({code: 1, msg: '无cookies信息'});
+    }
+});
+// 处理请求信息：axios.get('/user/list')
+router.get('/list', (req, res) => {
+    // 获取cookie中的_id
+    if(req.cookies && req.cookies._id){
+        const _id = req.cookies._id;
+        console.log('_id: '+_id);
+        User.findOne({_id}, (err, doc) => {
+            if(err){
+                res.json({code: 1, msg: '后端错误！'});
                 return;
             }
-            // 未找到与_id对应的用户信息
-            res.clearCookie('_id');// 删除cookie
-            res.json({code: 1, msg: '未找到跟_id对应的用户信息'});
+            if(doc){
+                // 找到与_id对应的用户信息
+                // let type = req.query.type;// BUG: 第一次加载有值，刷新时没有值
+                let type = doc.type;// 用户的类型
+                console.log('type = ', type);
+                type = (type==='boss') ? 'genius' : 'boss';
+                User.find({type}, (err, doc) => {
+                    if(err){
+                        res.json({code: 1, msg: '后端错误！'});
+                        return;
+                    }
+                    res.json({code: 0, chatList: doc});
+                });
+            }else{
+                // 未找到与_id对应的用户信息
+                res.clearCookie('_id');// 删除cookie
+                res.json({code: 1, msg: '未找到跟_id对应的用户信息'});
+            }
         })
     } else {
         // cookies不存在

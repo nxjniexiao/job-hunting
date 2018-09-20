@@ -4,7 +4,7 @@ import {Redirect} from 'react-router-dom';
 import {NavBar, List, InputItem, TextareaItem, Button} from 'antd-mobile';
 // 引入自定义库
 import AvatarSelector from '../../components/avatar-selector/avatar-selector';
-import {update} from '../../actions/actions';
+import {update} from '../../actions/actions-user';
 
 class GeniusInfo extends Component {
     constructor(props){
