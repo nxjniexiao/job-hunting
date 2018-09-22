@@ -6,27 +6,45 @@ import {Redirect} from 'react-router-dom';
 // 导入自定义库
 import Logo from '../../components/logo/logo';
 import {register} from '../../actions/actions-user';
+import handleChange from '../../components/handle-change/handle-change';
 
 const RadioItem = Radio.RadioItem;
+
+@handleChange
+@connect(
+    state => {
+        return {
+            redirectPath: state.user.redirectPath
+        };
+    },
+    dispatch => {
+        return {
+            register: info => dispatch(register(info))
+        };
+    }
+)
 class Register extends Component {
     constructor(props){
         super(props);
-        this.state={
-            username: '',
-            pwd: '',
-            repeatPwd: '',
-            type: 'boss'// 'boss'或者'genius'
-        };
+        // this.state={
+        //     username: '',
+        //     pwd: '',
+        //     repeatPwd: '',
+        //     type: 'boss'// 'boss'或者'genius'
+        // };
         this.handleRegister = this.handleRegister.bind(this);
     }
-    handleChange(key, value) {
-        this.setState({
-            [key]: value
-        });
+    componentDidMount() {
+        this.props.handleChange('type', 'boss');
     }
+    // handleChange(key, value) {
+    //     this.setState({
+    //         [key]: value
+    //     });
+    // }
     handleRegister() {
         const md5 = require('md5');
-        const {username, pwd, repeatPwd, type} = this.state;
+        const {username, pwd, repeatPwd, type} = this.props.state;
         if(username === ''){
             alert('用户名不能为空！');
             return;
@@ -58,24 +76,24 @@ class Register extends Component {
                 <WingBlank>
                     <List>
                         <InputItem
-                            onChange={v=>this.handleChange('username',v)}
+                            onChange={v=>this.props.handleChange('username',v)}
                         >用户名</InputItem>
                         <InputItem
                             type="password"
-                            onChange={v=>this.handleChange('pwd',v)}
+                            onChange={v=>this.props.handleChange('pwd',v)}
                         >密码</InputItem>
                         <InputItem
                             type="password"
-                            onChange={v=>this.handleChange('repeatPwd',v)}
+                            onChange={v=>this.props.handleChange('repeatPwd',v)}
                         >确认密码</InputItem>
                         <WhiteSpace/>
                         <RadioItem
-                            checked={this.state.type === "boss"}
-                            onChange={()=>this.handleChange('type',"boss")}
+                            checked={this.props.state.type === "boss"}
+                            onChange={()=>this.props.handleChange('type',"boss")}
                         >老板</RadioItem>
                         <RadioItem
-                            checked={this.state.type === "genius"}
-                            onChange={()=>this.handleChange('type',"genius")}
+                            checked={this.props.state.type === "genius"}
+                            onChange={()=>this.props.handleChange('type',"genius")}
                         >牛人</RadioItem>
                     </List>
                     <WhiteSpace/>
@@ -85,14 +103,15 @@ class Register extends Component {
         );
     }
 }
-const mapStateToProps = state => {
-    return {
-        redirectPath: state.user.redirectPath
-    }
-};
-const mapDispatchToProps = dispatch => {
-    return {
-        register: info => dispatch(register(info))
-    }
-};
-export default connect(mapStateToProps, mapDispatchToProps)(Register);
+// const mapStateToProps = state => {
+//     return {
+//         redirectPath: state.user.redirectPath
+//     };
+// };
+// const mapDispatchToProps = dispatch => {
+//     return {
+//         register: info => dispatch(register(info))
+//     };
+// };
+// export default connect(mapStateToProps, mapDispatchToProps)(Register);
+export default Register;

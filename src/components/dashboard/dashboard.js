@@ -7,6 +7,7 @@ import {withRouter, Route} from 'react-router-dom';
 import NavLink from '../../components/nav-link/nav-link';
 import Boss from '../../components/boss/boss';
 import Genius from '../../components/genius/genius';
+import My from '../../components/my/my';
 import {getChatList} from '../../actions/actions-chatList';
 
 class Dashboard extends Component {
@@ -18,7 +19,7 @@ class Dashboard extends Component {
     render() {
         /**temp**/
         const Message = () => (<div>Message Page</div>);
-        const My = () => (<div>My Page</div>);
+        // const My = () => (<div>My Page</div>);
         /**temp end**/
         const navList = [
             {

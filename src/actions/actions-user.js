@@ -3,27 +3,35 @@ import axios from "axios";
 export const AUTH_SUCCESS = 'AUTH_SUCCESS';
 export const LOAD_INFO = 'LOAD_INFO';
 export const ERR_MSG = 'ERR_MSG';
+export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
 
 //注册\登陆\更新成功
 function authSuccess(info) {
     return {
         type: AUTH_SUCCESS,
         info
-    }
+    };
 }
 // 根据cookie._id查询到相应用户
 export function loadInfo(info){
     return {
         type: LOAD_INFO,
         info
-    }
+    };
 }
 //出错
 function errMsg(msg) {
     return {
         type: ERR_MSG,
         msg
-    }
+    };
+}
+// 退出登录成功
+function logoutSuccess(msg){
+    return {
+        type: LOGOUT_SUCCESS,
+        msg
+    };
 }
 // Thunk(返回一个函数): 注册
 export function register({username, pwd, type}) {
@@ -69,5 +77,14 @@ export function update(info){
                     dispatch(errMsg(res.data.msg));
                 }
             }).catch(err => console.log(err));
+    }
+}
+// Thunk(返回一个函数): 退出登录
+export function logout() {
+    return dispatch => {
+        axios.get('/user/logout')
+            .then(res => {
+            dispatch(logoutSuccess(res.data.msg));
+            });
     }
 }

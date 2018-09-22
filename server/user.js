@@ -118,6 +118,7 @@ router.get('/list', (req, res) => {
                         res.json({code: 1, msg: '后端错误！'});
                         return;
                     }
+                    doc.forEach(item => {item.pwd = null});// 删除密码
                     res.json({code: 0, chatList: doc});
                 });
             }else{
@@ -130,5 +131,10 @@ router.get('/list', (req, res) => {
         // cookies不存在
         res.json({code: 1, msg: '无cookies信息'});
     }
+});
+// 处理登出请求：axios.get('/user/logout')
+router.get('/logout', (req, res) => {
+    res.clearCookie('_id');// 删除cookie
+    res.json({code: 0, msg: '已退出登录'});
 });
 module.exports = router;

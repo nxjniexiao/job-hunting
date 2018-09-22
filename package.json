@@ -107,14 +107,16 @@
           "libraryName": "antd-mobile",
           "style": "css"
         }
-      ]
+      ],
+      "transform-decorators-legacy"
     ]
   },
   "eslintConfig": {
     "extends": "react-app"
   },
   "devDependencies": {
-    "babel-plugin-import": "^1.8.0"
+    "babel-plugin-import": "^1.8.0",
+    "babel-plugin-transform-decorators-legacy": "^1.3.5"
   },
   "proxy": "http://localhost:3030"
 }
