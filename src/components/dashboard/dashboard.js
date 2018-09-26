@@ -9,32 +9,48 @@ import Boss from '../../components/boss/boss';
 import Genius from '../../components/genius/genius';
 import My from '../../components/my/my';
 import {getChatList} from '../../actions/actions-chatList';
+import {receiveMsg} from "../../actions/actions-chat";
+// import AuthRoute from '../../components/authroute/authroute';
 
-class Dashboard extends Component {
-    componentDidMount () {
-        // console.log(this.props);
-        // this.props.getList(this.props.type);// 第一次加载有值，刷新时没有值
-        this.props.getList();// 后端根据_id获取type
+@withRouter
+@connect(
+    state => state,
+    dispatch => {
+        return {
+            getList: () => dispatch(getChatList()),
+            receiveMsg: (fromUserID) => dispatch(receiveMsg(fromUserID))
+        }
     }
+)
+class Dashboard extends Component {
+    // componentWillMount () {
+    //     if(this.props.chatList.list.length === 0) {
+    //         this.props.getList();// 后端根据_id获取type
+    //     }
+    //     if(!this.props.chat.isOnline) {
+    //         const fromUserID = this.props.user._id;// 发送消息的ID
+    //         this.props.receiveMsg(fromUserID);
+    //     }
+    // }
     render() {
         /**temp**/
         const Message = () => (<div>Message Page</div>);
-        // const My = () => (<div>My Page</div>);
         /**temp end**/
+        const type = this.props.user.type;
         const navList = [
             {
                 title: '牛人列表',
                 path: '/boss',
                 icon: 'job',
                 component: Boss,
-                available: this.props.type === 'boss'
+                available: type === 'boss'
             },
             {
                 title: 'Boss列表',
                 path: '/genius',
                 icon: 'boss',
                 component: Genius,
-                available: this.props.type === 'genius'
+                available: type === 'genius'
             },
             {
                 title: '消息',
@@ -60,25 +76,16 @@ class Dashboard extends Component {
         });
         return (
             <div>
+                {/*<AuthRoute/>*/}
                 <NavBar className="fixed-header">{title}</NavBar>
                 <div className="content-wrapper">
                     {filteredNavList.map((list, index) => (
                         <Route key={index} path={list.path} component={list.component} />
                     ))}
                 </div>
-                <NavLink filteredNavList={filteredNavList}/>
+                <NavLink filteredNavList={filteredNavList} />
             </div>
         );
     }
 }
-const mapStateToProps = state => {
-    return {
-        type: state.user.type
-    };
-};
-const mapDispatchToProps = dispatch => {
-    return {
-        getList: () => dispatch(getChatList())
-    }
-};
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Dashboard));
+export default Dashboard;

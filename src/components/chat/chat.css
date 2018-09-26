@@ -1,0 +1,21 @@
+.msg-edit {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+}
+.msg-edit .am-input-extra {
+    max-height: 30px !important;
+    height: 30px !important;
+}
+.msg-edit .am-button {
+    height: 30px !important;
+    font-size: 14px !important;
+    line-height: 30px !important;
+}
+.msg-edit .am-button span {
+    margin: 0 10px;
+}
+.my-content {
+
+}

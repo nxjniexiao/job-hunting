@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {createStore, applyMiddleware} from 'redux';
+import {createStore, applyMiddleware, compose} from 'redux';
 import {Provider} from 'react-redux';
 import thunk from 'redux-thunk';
 import {createLogger} from 'redux-logger';
@@ -14,16 +14,16 @@ import AuthRoute from './components/authroute/authroute';
 import BossInfo from './containers/boss-info/boss-info';
 import GeniusInfo from './containers/genius-info/genius-info';
 import Dashboard from './components/dashboard/dashboard';
+import Chat from './components/chat/chat';
 
 const loggerMiddleware = createLogger();// 用来打印 action 日志
 const store = createStore(
     rootReducers,
-    applyMiddleware(
-        thunk,
-        loggerMiddleware
-    )
+    compose(
+        applyMiddleware(thunk,loggerMiddleware),
+        window.devToolsExtension?window.devToolsExtension():f=>f
+    ),
 );
-
 ReactDOM.render(
     (<Provider store={store}>
         <Router>
@@ -34,6 +34,7 @@ ReactDOM.render(
                     <Route path="/genius-info" component={GeniusInfo}/>
                     <Route path="/login" component={Login} />
                     <Route path="/register" component={Register} />
+                    <Route path="/chat/:chatWith" component={Chat} />
                     <Route component={Dashboard} />
                 </Switch>
             </div>

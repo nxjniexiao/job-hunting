@@ -5,13 +5,14 @@ import {
     ERR_MSG,
     LOGOUT_SUCCESS
 } from '../actions/actions-user';
-import {getRedirectPath} from '../common/js/util';
+import {getRedirectPath, getCookie} from '../common/js/util';
 
 const initState = {
     redirectPath: '',
     username: '',
     type: '',
-    msg: ''
+    msg: '',
+    _id: getCookie('_id')
 };
 
 const user = (state=initState, action)=> {

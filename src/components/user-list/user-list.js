@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import {WingBlank,Card} from 'antd-mobile';
+import {withRouter} from 'react-router-dom';
 
+@withRouter
 class UserList extends Component {
     showContent(data) {
         const isBoss = (data.type === "boss");
@@ -22,7 +24,10 @@ class UserList extends Component {
             <WingBlank>
                 {this.props.chatList.map((item, index) => {
                     return (
-                        <Card key={index}>
+                        <Card
+                            key={index}
+                            onClick={() => {this.props.history.push(`/chat/${item._id}`)}}
+                        >
                             <Header
                                 title={item.username}
                                 thumb={item.avatar}

@@ -68,11 +68,10 @@ class My extends Component {
         }
     }
     render() {
-        console.log(this.props.user.username);
         const currPath = this.props.location.pathname;
         const redirect = (this.props.user.redirectPath && (this.props.user.redirectPath !== currPath));
         return (<div>
-            { (!this.props.user.username && redirect) ? <Redirect to={this.props.user.redirectPath} /> : null}
+            { (!this.props.user._id && redirect) ? <Redirect to={this.props.user.redirectPath} /> : null}
             <Result
                 img={<img src={this.props.user.avatar} alt="头像" style={{width: '60px'}}/>}
                 title={this.props.user.username}
@@ -83,15 +82,4 @@ class My extends Component {
         </div>);
     }
 }
-// const mapStateToProps = state => {
-//     return {
-//         user: state.user
-//     }
-// };
-// const mapDispatchToProps = dispatch => {
-//     return {
-//         logout: () => dispatch(logout())
-//     }
-// };
-// export default connect(mapStateToProps, mapDispatchToProps)(My);
 export default My;
