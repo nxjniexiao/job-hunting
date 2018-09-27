@@ -1,14 +1,14 @@
 import {
     CHAT_ONLINE,
     CHAT_OFFLINE,
-    MSG_RECEIVED
+    MSG_RECEIVED,
+    GET_MSG_SUCCESS
 } from '../actions/actions-chat';
 
 const initState = {
     isOnline: false,
     chatmsgs: []
 };
-console.log(initState);
 const chat = (state = initState, action) => {
     switch (action.type) {
         case MSG_RECEIVED:
@@ -26,6 +26,11 @@ const chat = (state = initState, action) => {
                 ...state,
                 isOnline: false
             };
+        case GET_MSG_SUCCESS:
+            return {
+                ...state,
+                chatmsgs: action.chatmsgs
+            }
         default:
             return state;
     }

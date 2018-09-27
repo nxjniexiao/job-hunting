@@ -19,7 +19,13 @@ const models = {
         company: {type: String},
         salary: {type: String}
     },
-    chat: {},
+    chat: {
+        relevantUsers: {type: String, required: true},
+        fromUserID:  {type: String, required: true},
+        toUserID:  {type: String, required: true},
+        text: {type: String, required: true},
+        createTime: {type: Number, default: Date.now()},//new Date()?
+    },
 };
 for (let modelName in models) {
     // mongoose.model(name, schema)定义一个model

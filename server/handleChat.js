@@ -1,3 +1,7 @@
+// 自定义库
+const getModel = require('./model');
+const Chat = getModel('chat');
+
 function handleChat(io){
     const socketsOnline = {};
     io.on('connection', function(socket){
@@ -22,12 +26,22 @@ function handleChat(io){
         // 监听客户端A发来的消息
         socket.on('send-msg', function(data){
             // 把信息存储在mongodb数据库中
+            // const relevantUsers = [data.fromUserID, data.toUserID].sort().join('_');
+            // data = {relevantUsers, ...data};
+            const instance = new Chat(data);
+            instance.save((err, product) => {
+                if(err){
+                    console.log('存储消息失败');
+                } else {
+                    // 给指定客户端B发送信息
+                    if(socketsOnline[data.toUserID]) {
+                        console.log('=== 发送消息 ===');
+                        // 新建relevantUsers属性。。。
+                        io.sockets.connected[socketsOnline[data.toUserID].id].emit('receive-msg', data);
+                    }
+                }
+            });
 
-            // 给指定客户端B发送信息
-            if(socketsOnline[data.toUserID]) {
-                console.log('=== 发送消息 ===');
-                io.sockets.connected[socketsOnline[data.toUserID].id].emit('receive-msg', data);
-            }
         });
     });
 }

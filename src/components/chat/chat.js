@@ -2,14 +2,18 @@ import './chat.css';
 import React, {Component} from 'react';
 import {NavBar, Icon, List, InputItem, Button} from 'antd-mobile';
 import {connect} from 'react-redux';
-import { sendMsg } from "../../actions/actions-chat";
+// 引入自定义库
+import {getChatList} from '../../actions/actions-chatList';
+import {getMsg, receiveMsg, sendMsg} from "../../actions/actions-chat";
 
 const Item = List.Item;
 @connect(
     state => state,
     dispatch => {
         return {
-            // receiveMsg: (fromUserID) => dispatch(receiveMsg(fromUserID)),
+            getMsg: () => dispatch(getMsg()),
+            getList: () => dispatch(getChatList()),
+            receiveMsg: (fromUserID) => dispatch(receiveMsg(fromUserID)),
             sendMsg:(fromUserID, toUserID, text) => dispatch(sendMsg(fromUserID, toUserID, text))
         }
     }
@@ -21,15 +25,23 @@ class Chat extends Component {
             text: ''
         }
     }
-    componentDidMount() {
-        // const fromUserID = this.props.user._id;// 发送消息的ID
-        // this.props.receiveMsg(fromUserID);
+    componentWillMount() {
+
     }
-    // componentWillUpdate(){
-    //     console.log('组件更新');
-    //     const fromUserID = this.props.user._id;// 发送消息的ID
-    //     goOnline(fromUserID);
-    // }
+    componentDidMount() {
+        console.log('Chat 组件已经挂载');
+        if(this.props.chatList.list.length === 0) {
+            this.props.getList();// 后端根据_id获取type
+        }
+        if(!this.props.chat.isOnline) {
+            const fromUserID = this.props.user._id;// 发送消息的ID
+            this.props.receiveMsg(fromUserID);
+        }
+        if(this.props.chat.chatmsgs.length === 0){
+            this.props.getMsg();
+        }
+        // this.props.getMsg();
+    }
     handleSubmit() {
         const fromUserID = this.props.user._id;// 发送消息的ID
         const toUserID = this.props.match.params.chatWith;// 接收消息的ID
@@ -40,35 +52,52 @@ class Chat extends Component {
     }
     showChatContent(chatContent) {
         const fromUserID = this.props.user._id;// 发送消息的ID
-        // const toUserID = this.props.match.params.chatWith;// 接收消息的ID
-        return (
-            <List>
-                {chatContent.map((msg, index) => {
-                    if (msg.fromUserID === fromUserID){
-                        return <Item
-                            key={index}
-                            className="my-content"
-                            thumb={this.props.user.avatar}
-                        >{msg.text}</Item>
-                    } else {
-                        return <Item
-                            key={index}
-                            // thumb={this.props.chaList}
-                        >{msg.text}</Item>
-                    }
-                })}
-            </List>
-        );
-
-    }
-    render(){
+        const toUserID = this.props.match.params.chatWith;// 接收消息的ID
+        // 获取对方信息
+        let toInfo = null;
+        this.props.chatList.list.forEach(item => {
+            if(item._id === toUserID) {
+                toInfo = {
+                    username: item.username,
+                    _id: item._id,
+                    avatar: item.avatar
+                }
+            }
+        });
         return (
             <div>
                 <NavBar
                     mode="dark"
                     icon={<Icon type="left"/>}
                     onLeftClick={() => {this.props.history.goBack()}}
-                >name</NavBar>
+                >{toInfo ? toInfo.username : ''}</NavBar>
+                <List className="chat-msg">
+                    {chatContent.map((msg, index) => {
+                        const relevantUsers = [fromUserID, toUserID].sort().join('_');
+                        if(msg.relevantUsers !== relevantUsers){
+                            return null;
+                        }
+                        if (msg.fromUserID === fromUserID){
+                            return <Item
+                                key={index}
+                                className="my-content"
+                                extra={<img src={toInfo.avatar} alt="img" />}
+                            >{msg.text}</Item>
+                        } else {
+                            return <Item
+                                key={index}
+                                thumb={this.props.user.avatar}
+                            >{msg.text}</Item>
+                        }
+                    })}
+                </List>
+            </div>
+        );
+
+    }
+    render(){
+        return (
+            <div>
                 {this.showChatContent(this.props.chat.chatmsgs)}
                 <List className="msg-edit">
                     <InputItem

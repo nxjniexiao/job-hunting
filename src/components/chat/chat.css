@@ -16,6 +16,13 @@
 .msg-edit .am-button span {
     margin: 0 10px;
 }
-.my-content {
-
+/*.my-content {*/
+    /*background: #9eea6a !important;*/
+/*}*/
+.my-content .am-list-content {
+    text-align: right !important;
+    background: #f5f5f9 !important;
+}
+.my-content .am-list-extra {
+    flex-basis: 10% !important;
 }

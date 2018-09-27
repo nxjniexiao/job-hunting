@@ -5,6 +5,7 @@ const getModel = require('./model');
 
 // mongoose，连接mongodb数据库
 const User = getModel('user');
+const Chat = getModel('chat');
 // 处理注册: axios.post("/user/register", {})
 router.post('/register', (req, res) => {
     const {username, pwd, type} = req.body;// req.body：使用body-parser后产生的对象
@@ -136,5 +137,35 @@ router.get('/list', (req, res) => {
 router.get('/logout', (req, res) => {
     res.clearCookie('_id');// 删除cookie
     res.json({code: 0, msg: '已退出登录'});
+});
+// 处理获取聊天信息请求：axios.get('/user/msg-list')
+router.get('/msg-list', (req, res) => {
+    // 获取cookie中的_id
+    if(req.cookies && req.cookies._id){
+        const _id = req.cookies._id;
+        User.findOne({_id}, (err, doc) => {
+            if(err){
+                res.json({code: 1, msg: '后端错误！'});
+                return;
+            }
+            if(doc){
+                // 找到与_id对应的用户信息
+                Chat.find({'$or': [{fromUserID: _id}, {toUserID: _id}]}, (err, doc) => {
+                    if(err){
+                        res.json({code: 1, msg: '后端错误！'});
+                        return;
+                    }
+                    res.json({code: 0, chatmsgs: doc});
+                })
+            }else{
+                // 未找到与_id对应的用户信息
+                res.clearCookie('_id');// 删除cookie
+                res.json({code: 1, msg: '未找到跟_id对应的用户信息'});
+            }
+        })
+    } else {
+        // cookies不存在
+        res.json({code: 1, msg: '无cookies信息'});
+    }
 });
 module.exports = router;

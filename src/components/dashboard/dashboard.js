@@ -3,14 +3,13 @@ import React, {Component} from 'react';
 import {NavBar} from 'antd-mobile';
 import {connect} from 'react-redux';
 import {withRouter, Route} from 'react-router-dom';
-//引入自定义库
+// 引入自定义库
 import NavLink from '../../components/nav-link/nav-link';
 import Boss from '../../components/boss/boss';
 import Genius from '../../components/genius/genius';
 import My from '../../components/my/my';
 import {getChatList} from '../../actions/actions-chatList';
 import {receiveMsg} from "../../actions/actions-chat";
-// import AuthRoute from '../../components/authroute/authroute';
 
 @withRouter
 @connect(
@@ -23,15 +22,22 @@ import {receiveMsg} from "../../actions/actions-chat";
     }
 )
 class Dashboard extends Component {
-    // componentWillMount () {
-    //     if(this.props.chatList.list.length === 0) {
-    //         this.props.getList();// 后端根据_id获取type
-    //     }
-    //     if(!this.props.chat.isOnline) {
-    //         const fromUserID = this.props.user._id;// 发送消息的ID
-    //         this.props.receiveMsg(fromUserID);
-    //     }
-    // }
+    componentWillMount () {
+        console.log('== Dashboard 组件即将挂载');
+        if(this.props.chatList.list.length === 0) {
+            this.props.getList();// 后端根据_id获取type
+        }
+        if(!this.props.chat.isOnline) {
+            const fromUserID = this.props.user._id;// 发送消息的ID
+            this.props.receiveMsg(fromUserID);
+        }
+    }
+    componentWillUpdate() {
+        console.log('== Dashboard 组件即将更新');
+    }
+    componentDidUpdate() {
+        console.log('== Dashboard 组件已经更新');
+    }
     render() {
         /**temp**/
         const Message = () => (<div>Message Page</div>);
@@ -76,7 +82,6 @@ class Dashboard extends Component {
         });
         return (
             <div>
-                {/*<AuthRoute/>*/}
                 <NavBar className="fixed-header">{title}</NavBar>
                 <div className="content-wrapper">
                     {filteredNavList.map((list, index) => (

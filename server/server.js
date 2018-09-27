@@ -16,7 +16,7 @@ const io = require('socket.io')(server);
 handleChat(io);
 // 配置结束
 
-let _server = server.listen(3030, '127.0.0.1', () => {
+let _server = server.listen(3030, '192.168.8.103', () => {
     const host = _server.address().address;
     const port = _server.address().port;
     console.log('http://%s:%s', host, port);
