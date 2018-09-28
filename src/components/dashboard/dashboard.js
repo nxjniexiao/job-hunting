@@ -9,13 +9,14 @@ import Boss from '../../components/boss/boss';
 import Genius from '../../components/genius/genius';
 import My from '../../components/my/my';
 import {getChatList} from '../../actions/actions-chatList';
-import {receiveMsg} from "../../actions/actions-chat";
+import {receiveMsg, getMsg} from "../../actions/actions-chat";
 
 @withRouter
 @connect(
     state => state,
     dispatch => {
         return {
+            getMsg: () => dispatch(getMsg()),
             getList: () => dispatch(getChatList()),
             receiveMsg: (fromUserID) => dispatch(receiveMsg(fromUserID))
         }
@@ -30,6 +31,9 @@ class Dashboard extends Component {
         if(!this.props.chat.isOnline) {
             const fromUserID = this.props.user._id;// 发送消息的ID
             this.props.receiveMsg(fromUserID);
+        }
+        if(this.props.chat.chatmsgs.length === 0){
+            this.props.getMsg();
         }
     }
     componentWillUpdate() {
@@ -80,6 +84,14 @@ class Dashboard extends Component {
                 title = item.title;
             }
         });
+        // 未读消息数量
+        const fromUserID = this.props.user._id;// 发送消息的ID
+        let unreadMsgs = 0;
+            this.props.chat.chatmsgs.forEach((msg) => {
+                if(msg.toUserID === fromUserID && msg.isRead === false){
+                    unreadMsgs++;
+                }
+            });
         return (
             <div>
                 <NavBar className="fixed-header">{title}</NavBar>
@@ -88,7 +100,7 @@ class Dashboard extends Component {
                         <Route key={index} path={list.path} component={list.component} />
                     ))}
                 </div>
-                <NavLink filteredNavList={filteredNavList} />
+                <NavLink filteredNavList={filteredNavList} unreadMsgs={unreadMsgs}/>
             </div>
         );
     }

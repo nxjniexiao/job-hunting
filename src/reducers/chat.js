@@ -2,7 +2,8 @@ import {
     CHAT_ONLINE,
     CHAT_OFFLINE,
     MSG_RECEIVED,
-    GET_MSG_SUCCESS
+    GET_MSG_SUCCESS,
+    MSG_READ
 } from '../actions/actions-chat';
 
 const initState = {
@@ -30,7 +31,21 @@ const chat = (state = initState, action) => {
             return {
                 ...state,
                 chatmsgs: action.chatmsgs
-            }
+            };
+        case MSG_READ:
+            let newChatMsgs = state.chatmsgs.map(msg => {
+                if(msg.fromUserID === action.toUserID && msg.toUserID ===  action.fromUserID) {
+                    // 判断条件是反的，对方发给我的消息设为已读
+                    console.log('ok');
+                    return {...msg, isRead: true};
+                }
+                return msg;
+            });
+            console.log(newChatMsgs);
+            return {
+                ...state,
+                chatmsgs: newChatMsgs
+            };
         default:
             return state;
     }

@@ -24,7 +24,8 @@ const models = {
         fromUserID:  {type: String, required: true},
         toUserID:  {type: String, required: true},
         text: {type: String, required: true},
-        createTime: {type: Number, default: Date.now()},//new Date()?
+        isRead: {type: Boolean, default: false},
+        createTime: {type: Number, default: Date.now},//new Date()?Date.now()?
     },
 };
 for (let modelName in models) {

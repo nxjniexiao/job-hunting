@@ -168,4 +168,17 @@ router.get('/msg-list', (req, res) => {
         res.json({code: 1, msg: '无cookies信息'});
     }
 });
+// axios.post('/user/read-msg',{fromUserID, toUserID})
+router.post('/read-msg', (req, res) => {
+    // console.log(req.body);
+    const {fromUserID, toUserID} = req.body;
+    Chat.updateMany({fromUserID: toUserID, toUserID: fromUserID}, {$set: {isRead: true}}, (err, doc)=>{
+        // 筛选条件颠倒，是为了把对方发给自己的消息设为已读
+        if(err){
+            res.json({code:1, msg: '设置消息为已读失败'});
+            return;
+        }
+        res.json({code:0, msg: '设置消息为已读成功'});
+    });
+});
 module.exports = router;

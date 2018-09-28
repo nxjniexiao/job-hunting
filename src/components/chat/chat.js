@@ -4,7 +4,7 @@ import {NavBar, Icon, List, InputItem, Button} from 'antd-mobile';
 import {connect} from 'react-redux';
 // 引入自定义库
 import {getChatList} from '../../actions/actions-chatList';
-import {getMsg, receiveMsg, sendMsg} from "../../actions/actions-chat";
+import {getMsg, receiveMsg, sendMsg, readMsg} from "../../actions/actions-chat";
 
 const Item = List.Item;
 @connect(
@@ -14,7 +14,8 @@ const Item = List.Item;
             getMsg: () => dispatch(getMsg()),
             getList: () => dispatch(getChatList()),
             receiveMsg: (fromUserID) => dispatch(receiveMsg(fromUserID)),
-            sendMsg:(fromUserID, toUserID, text) => dispatch(sendMsg(fromUserID, toUserID, text))
+            sendMsg: (fromUserID, toUserID, text) => dispatch(sendMsg(fromUserID, toUserID, text)),
+            readMsg: (fromUserID, toUserID) => dispatch(readMsg(fromUserID, toUserID))
         }
     }
 )
@@ -40,7 +41,11 @@ class Chat extends Component {
         if(this.props.chat.chatmsgs.length === 0){
             this.props.getMsg();
         }
-        // this.props.getMsg();
+    }
+    componentWillUnmount() {
+        const fromUserID = this.props.user._id;// 发送消息的ID
+        const toUserID = this.props.match.params.chatWith;// 接收消息的ID
+        this.props.readMsg(fromUserID, toUserID);
     }
     handleSubmit() {
         const fromUserID = this.props.user._id;// 发送消息的ID
@@ -81,12 +86,12 @@ class Chat extends Component {
                             return <Item
                                 key={index}
                                 className="my-content"
-                                extra={<img src={toInfo.avatar} alt="img" />}
+                                extra={<img src={this.props.user.avatar} alt="img" />}
                             >{msg.text}</Item>
                         } else {
                             return <Item
                                 key={index}
-                                thumb={this.props.user.avatar}
+                                thumb={toInfo.avatar}
                             >{msg.text}</Item>
                         }
                     })}

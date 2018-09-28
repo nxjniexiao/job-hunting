@@ -22,6 +22,7 @@ class NavLink extends Component {
                         icon={{uri: require(`./icons/${item.icon}.png`)}}
                         selectedIcon={{uri: require(`./icons/${item.icon}-active.png`)}}
                         selected={currPath === item.path}
+                        badge={item.path === '/message' ? this.props.unreadMsgs : 0}
                         onPress={() => this.props.history.push(item.path)}
                     />))
                 }

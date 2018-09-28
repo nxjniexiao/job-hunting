@@ -5,6 +5,7 @@ export const MSG_RECEIVED = 'MSG_RECEIVED';
 export const CHAT_ONLINE = 'CHAT_ONLINE';
 export const CHAT_OFFLINE = 'CHAT_OFFLINE';
 export const GET_MSG_SUCCESS = 'GET_MSG_SUCCESS';
+export const MSG_READ = 'MSG_READ';
 let socket = null;
 
 function msgReceived(msg){
@@ -50,7 +51,7 @@ export function receiveMsg(fromUserID) {
 export function sendMsg(fromUserID, toUserID, text){
     return dispatch => {
         const relevantUsers = [fromUserID, toUserID].sort().join('_');
-        const data =  {relevantUsers, fromUserID, toUserID, text};
+        const data =  {relevantUsers, fromUserID, toUserID, text, isRead: false};
         socket.emit('send-msg', data);
         dispatch(msgReceived(data));
     }
@@ -68,5 +69,22 @@ export function getMsg() {
                 dispatch(getMsgSuccess(res.data.chatmsgs));
             }
         })
+    }
+}
+function msgRead(fromUserID, toUserID) {
+    return {
+        type: MSG_READ,
+        fromUserID,
+        toUserID
+    }
+}
+export function readMsg(fromUserID, toUserID) {
+    return dispatch => {
+        axios.post('/user/read-msg',{fromUserID, toUserID})
+            .then(res => {
+                if(res.status === 200 && res.data.code === 0) {
+                    dispatch(msgRead(fromUserID, toUserID));
+                }
+            });
     }
 }
