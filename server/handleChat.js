@@ -37,7 +37,7 @@ function handleChat(io){
                     if(socketsOnline[data.toUserID]) {
                         console.log('=== 发送消息 ===');
                         // 新建relevantUsers属性。。。
-                        io.sockets.connected[socketsOnline[data.toUserID].id].emit('receive-msg', data);
+                        io.sockets.connected[socketsOnline[data.toUserID].id].emit('receive-msg', product);
                     }
                 }
             });

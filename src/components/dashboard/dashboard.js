@@ -8,6 +8,7 @@ import NavLink from '../../components/nav-link/nav-link';
 import Boss from '../../components/boss/boss';
 import Genius from '../../components/genius/genius';
 import My from '../../components/my/my';
+import Message from '../../components/message/message';
 import {getChatList} from '../../actions/actions-chatList';
 import {receiveMsg, getMsg} from "../../actions/actions-chat";
 
@@ -25,9 +26,10 @@ import {receiveMsg, getMsg} from "../../actions/actions-chat";
 class Dashboard extends Component {
     componentWillMount () {
         console.log('== Dashboard 组件即将挂载');
-        if(this.props.chatList.list.length === 0) {
-            this.props.getList();// 后端根据_id获取type
-        }
+        this.props.getList();// 后端根据_id获取type
+        // if(this.props.chatList.list.length === 0) {
+        //     this.props.getList();// 后端根据_id获取type
+        // }
         if(!this.props.chat.isOnline) {
             const fromUserID = this.props.user._id;// 发送消息的ID
             this.props.receiveMsg(fromUserID);
@@ -43,9 +45,6 @@ class Dashboard extends Component {
         console.log('== Dashboard 组件已经更新');
     }
     render() {
-        /**temp**/
-        const Message = () => (<div>Message Page</div>);
-        /**temp end**/
         const type = this.props.user.type;
         const navList = [
             {
