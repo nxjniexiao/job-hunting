@@ -26,6 +26,15 @@ class Message extends Component {
     getLastMsg(msgList){
         return msgList[msgList.length - 1];
     }
+    countUnread(msgList) {
+       let count = 0;
+       msgList.forEach(msg => {
+           if(!msg.isRead){
+               count ++;
+           }
+       });
+       return count;
+    }
     getUser(_id, userList) {
         let res = null;
         userList.forEach(list => {
@@ -72,12 +81,12 @@ class Message extends Component {
         unreadMsgUserList.sort(compare);
         // 渲染
         return (<div>
-            {this.renderMessage(unreadMsgUserList, msg, userList, false)}
-            {this.renderMessage(readMsgUserList, msg, userList, true)}
+            {this.renderMessage(unreadMsgUserList, msg, userList)}
+            {this.renderMessage(readMsgUserList, msg, userList)}
         </div>)
     }
 
-    renderMessage(msgList, msg, userList, isRead) {
+    renderMessage(msgList, msg, userList,) {
         return msgList.map(id => {
             return (
                 <List key={id}>
@@ -85,8 +94,8 @@ class Message extends Component {
                         arrow="horizontal"
                         thumb={this.getUser(id, userList).avatar}
                         extra={<div>
+                            {<Badge style={ {marginRight: '5px'} } text={this.countUnread(msg[id])}/>}
                             {this.getTime(this.getLastMsg(msg[id]).createTime)}
-                            {isRead ? null : <Badge style={ {marginLeft: '5px'} } text={msg[id].length}/>}
                         </div>}
                         onClick={() => this.props.history.push(`/chat/${id}`)}
                     >
