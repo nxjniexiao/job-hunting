@@ -5,10 +5,9 @@
 }
 .content-wrapper{
     position: fixed;
-    left: 0;
-    right: 0;
     top: 45px;
-    bottom: 45px;
+    bottom: 50px;
+    width: 100%;
 }
 .am-tabs-tab-bar-wrap{
     position: fixed;

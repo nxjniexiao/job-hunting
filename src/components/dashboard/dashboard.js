@@ -3,6 +3,7 @@ import React, {Component} from 'react';
 import {NavBar} from 'antd-mobile';
 import {connect} from 'react-redux';
 import {withRouter, Route} from 'react-router-dom';
+import BScroll from 'better-scroll';
 // 引入自定义库
 import NavLink from '../../components/nav-link/nav-link';
 import Boss from '../../components/boss/boss';
@@ -36,6 +37,13 @@ class Dashboard extends Component {
         }
         if(this.props.chat.chatmsgs.length === 0){
             this.props.getMsg();
+        }
+    }
+    componentDidMount() {
+        // 中间内容区域滚动(异步问题)
+        const contentWrapper = document.querySelector('.content-wrapper');
+        if(contentWrapper){
+            new BScroll(contentWrapper, {click: true});
         }
     }
     componentWillUpdate() {
@@ -95,9 +103,11 @@ class Dashboard extends Component {
             <div>
                 <NavBar className="fixed-header">{title}</NavBar>
                 <div className="content-wrapper">
-                    {filteredNavList.map((list, index) => (
-                        <Route key={index} path={list.path} component={list.component} />
-                    ))}
+                    <div className="content">
+                        {filteredNavList.map((list, index) => (
+                            <Route key={index} path={list.path} component={list.component} />
+                        ))}
+                    </div>
                 </div>
                 <NavLink filteredNavList={filteredNavList} unreadMsgs={unreadMsgs}/>
             </div>

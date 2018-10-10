@@ -2,6 +2,7 @@ import './chat.css';
 import React, {Component} from 'react';
 import {NavBar, Icon, List, InputItem, Button} from 'antd-mobile';
 import {connect} from 'react-redux';
+import BScroll from 'better-scroll';
 // 引入自定义库
 import {getChatList} from '../../actions/actions-chatList';
 import {getMsg, receiveMsg, sendMsg, readMsg} from "../../actions/actions-chat";
@@ -40,6 +41,17 @@ class Chat extends Component {
         }
         if(this.props.chat.chatmsgs.length === 0){
             this.props.getMsg();
+        }
+        // 聊天信息滚动
+        const chatMsg = document.querySelector('.am-list');
+        if(chatMsg){
+            const msgScroll = new BScroll(chatMsg);
+            const wrapperY = document.querySelector('.am-list').clientHeight;
+            const contentY = document.querySelector('.am-list-body').clientHeight;
+            if(wrapperY < contentY) {
+                const disY = wrapperY - contentY;
+                msgScroll.scrollTo(0, disY, 300);
+            }
         }
     }
     componentWillUnmount() {

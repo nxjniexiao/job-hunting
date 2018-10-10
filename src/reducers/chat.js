@@ -36,12 +36,10 @@ const chat = (state = initState, action) => {
             let newChatMsgs = state.chatmsgs.map(msg => {
                 if(msg.fromUserID === action.toUserID && msg.toUserID ===  action.fromUserID) {
                     // 判断条件是反的，对方发给我的消息设为已读
-                    console.log('ok');
                     return {...msg, isRead: true};
                 }
                 return msg;
             });
-            console.log(newChatMsgs);
             return {
                 ...state,
                 chatmsgs: newChatMsgs

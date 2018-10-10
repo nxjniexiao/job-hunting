@@ -1,3 +1,16 @@
+.am-navbar{
+    z-index: 1;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+.chat-msg{
+    position: fixed;
+    top: 45px;
+    bottom: 44px;
+    width: 100%;
+}
 .msg-edit {
     position: fixed;
     left: 0;
