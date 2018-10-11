@@ -1,4 +1,7 @@
 import axios from "axios";
+// 自定义模块
+import {emptyChatList} from '../actions/actions-chatList';
+import {emptyMsgList} from '../actions/actions-chat';
 
 export const AUTH_SUCCESS = 'AUTH_SUCCESS';
 export const LOAD_INFO = 'LOAD_INFO';
@@ -85,6 +88,10 @@ export function logout() {
         axios.get('/user/logout')
             .then(res => {
             dispatch(logoutSuccess(res.data.msg));
+            // 清空用户列表
+            dispatch(emptyChatList(res.data.msg));
+            // 清空聊天信息
+            dispatch(emptyMsgList());
             });
     }
 }

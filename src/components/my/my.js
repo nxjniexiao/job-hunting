@@ -73,7 +73,6 @@ class My extends Component {
     }
     render() {
         console.log('my 组件 render 中。。。');
-        console.log(this.props);
         const currPath = this.props.location.pathname;
         const redirect = (this.props.user.redirectPath && (this.props.user.redirectPath !== currPath));
         return (<div>

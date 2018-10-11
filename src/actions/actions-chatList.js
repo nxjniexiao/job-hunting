@@ -2,17 +2,26 @@ import axios from "axios";
 
 export const GET_CHART_LIST_SUCCESS = 'GET_CHART_LIST_SUCCESS';
 export const GET_CHART_LIST_FAILED = 'GET_CHART_LIST_FAILED';
+export const EMPTY_CHART_LIST = 'EMPTY_CHART_LIST';
 
+// 成功
 function getChatListSuccess(chatList) {
     return {
         type: GET_CHART_LIST_SUCCESS,
         chatList
     }
 }
-//出错
+// 出错
 function getChatListFailed(msg) {
     return {
         type: GET_CHART_LIST_FAILED,
+        msg
+    }
+}
+// 清空
+export function emptyChatList(msg) {
+    return {
+        type: EMPTY_CHART_LIST,
         msg
     }
 }

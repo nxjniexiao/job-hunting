@@ -6,6 +6,7 @@ export const CHAT_ONLINE = 'CHAT_ONLINE';
 export const CHAT_OFFLINE = 'CHAT_OFFLINE';
 export const GET_MSG_SUCCESS = 'GET_MSG_SUCCESS';
 export const MSG_READ = 'MSG_READ';
+export const EMPTY_MSG = 'EMPTY_MSG';
 let socket = null;
 
 function msgReceived(msg){
@@ -14,29 +15,11 @@ function msgReceived(msg){
         msg
     };
 }
-// export function goOnline(fromUserID){
-//     return dispatch => {
-//         dispatch({
-//             type: CHAT_ONLINE
-//         });
-//         socket = io('http://localhost:3030');// 连接服务器
-//         socket.emit('online', fromUserID);// 上线
-//         // 监听后端发来的消息
-//         socket.on('receive-msg', function(data){
-//             dispatch(msgReceived(data));
-//         });
-//     }
-// }
-// export function chatOnline(){
-//     return {
-//         type: CHAT_ONLINE
-//     }
-// }
-// export function goOffline(){
-//     return {
-//         type: CHAT_OFFLINE
-//     }
-// }
+export function emptyMsgList(){
+    return {
+        type: EMPTY_MSG
+    };
+}
 export function receiveMsg(fromUserID) {
     return dispatch => {
         dispatch({type: CHAT_ONLINE});

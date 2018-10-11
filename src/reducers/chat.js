@@ -3,7 +3,8 @@ import {
     CHAT_OFFLINE,
     MSG_RECEIVED,
     GET_MSG_SUCCESS,
-    MSG_READ
+    MSG_READ,
+    EMPTY_MSG
 } from '../actions/actions-chat';
 
 const initState = {
@@ -43,6 +44,11 @@ const chat = (state = initState, action) => {
             return {
                 ...state,
                 chatmsgs: newChatMsgs
+            };
+        case EMPTY_MSG:
+            return {
+                isOnline: false,
+                chatmsgs: []
             };
         default:
             return state;

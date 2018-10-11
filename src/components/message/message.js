@@ -112,7 +112,7 @@ class Message extends Component {
                     <Item
                         arrow="horizontal"
                         thumb={this.getUser(id, userList).avatar}
-                        extra={<div>
+                        extra={<div style={ {fontSize: '15px'} }>
                             {<Badge style={ {marginRight: '5px'} } text={this.countUnread(msg[id])}/>}
                             {this.getTime(this.getLastMsg(msg[id]).createTime)}
                         </div>}

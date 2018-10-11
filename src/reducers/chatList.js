@@ -1,4 +1,8 @@
-import {GET_CHART_LIST_SUCCESS, GET_CHART_LIST_FAILED} from '../actions/actions-chatList';
+import {
+    GET_CHART_LIST_SUCCESS,
+    GET_CHART_LIST_FAILED,
+    EMPTY_CHART_LIST
+} from '../actions/actions-chatList';
 
 const chatList = (state = {list: [], msg: ''}, action) => {
     switch(action.type){
@@ -11,6 +15,11 @@ const chatList = (state = {list: [], msg: ''}, action) => {
         case GET_CHART_LIST_FAILED:
             return {
                 ...state,
+                list: [],
+                msg: action.msg
+            };
+        case EMPTY_CHART_LIST:
+            return {
                 list: [],
                 msg: action.msg
             };
