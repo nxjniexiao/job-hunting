@@ -1,21 +1,29 @@
 import './chat.css';
 import React, {Component} from 'react';
-import {NavBar, Icon, List, InputItem, Button} from 'antd-mobile';
+import {NavBar, Icon, List} from 'antd-mobile';
 import {connect} from 'react-redux';
 import BScroll from 'better-scroll';
 // 引入自定义库
 import {getChatList} from '../../actions/actions-chatList';
-import {getMsg, receiveMsg, sendMsg, readMsg} from "../../actions/actions-chat";
+import {getMsg, receiveMsg, readMsg} from "../../actions/actions-chat";
+import ChatInput from './chat-input';
 
 const Item = List.Item;
 @connect(
-    state => state,
+    state => {
+        return {
+            _id: state.user._id,
+            avatar: state.user.avatar,
+            isOnline: state.chat.isOnline,
+            chatmsgs: state.chat.chatmsgs,
+            list: state.chatList.list
+        }
+    },
     dispatch => {
         return {
             getMsg: () => dispatch(getMsg()),
             getList: () => dispatch(getChatList()),
             receiveMsg: (fromUserID) => dispatch(receiveMsg(fromUserID)),
-            sendMsg: (fromUserID, toUserID, text) => dispatch(sendMsg(fromUserID, toUserID, text)),
             readMsg: (fromUserID, toUserID) => dispatch(readMsg(fromUserID, toUserID))
         }
     }
@@ -28,51 +36,61 @@ class Chat extends Component {
         }
     }
     componentWillMount() {
-
-    }
-    componentDidMount() {
-        console.log('Chat 组件已经挂载');
-        if(this.props.chatList.list.length === 0) {
+        if(this.props.list.length === 0) {
             this.props.getList();// 后端根据_id获取type
         }
-        if(!this.props.chat.isOnline) {
-            const fromUserID = this.props.user._id;// 发送消息的ID
+        if(!this.props.isOnline) {
+            const fromUserID = this.props._id;// 发送消息的ID
             this.props.receiveMsg(fromUserID);
         }
-        if(this.props.chat.chatmsgs.length === 0){
+        if(this.props.chatmsgs.length === 0){
             this.props.getMsg();
         }
+    }
+    componentDidMount() {
         // 聊天信息滚动
-        const chatMsg = document.querySelector('.am-list');
-        if(chatMsg){
-            const msgScroll = new BScroll(chatMsg);
-            const wrapperY = document.querySelector('.am-list').clientHeight;
-            const contentY = document.querySelector('.am-list-body').clientHeight;
-            if(wrapperY < contentY) {
-                const disY = wrapperY - contentY;
-                msgScroll.scrollTo(0, disY, 300);
-            }
-        }
+        this.scrollMsgs();
+    }
+    shouldComponentUpdate(nextProps, nextState) {
+        return (
+            this.props.chatmsgs.length !== nextProps.chatmsgs.length
+        );
+    }
+    componentDidUpdate() {
+        // 聊天信息滚动
+        this.scrollMsgs();
     }
     componentWillUnmount() {
-        const fromUserID = this.props.user._id;// 发送消息的ID
+        const fromUserID = this.props._id;// 发送消息的ID
         const toUserID = this.props.match.params.chatWith;// 接收消息的ID
         this.props.readMsg(fromUserID, toUserID);
     }
-    handleSubmit() {
-        const fromUserID = this.props.user._id;// 发送消息的ID
-        const toUserID = this.props.match.params.chatWith;// 接收消息的ID
-        this.props.sendMsg(fromUserID, toUserID, this.state.text);
-        this.setState({
-            text: ''
-        })
+    scrollMsgs() {
+        this.msgsScrollY = 0;
+        const chatMsg = document.querySelector('.am-list');
+        if(chatMsg){
+            if(this.msgScroll !== null){
+                this.msgScroll = new BScroll(chatMsg, {probeType: 3});
+            }
+            const wrapperY = document.querySelector('.am-list').clientHeight;
+            const contentY = document.querySelector('.am-list-body').clientHeight;
+            this.msgScroll.on('scroll', (pos) => {
+                this.msgsScrollY = Math.abs(Math.round(pos.y));
+                // console.log('this.msgsScrollY=', this.msgsScrollY);
+            });
+            const disY = contentY - wrapperY;
+            // console.log('disY=',disY);
+            if( this.msgsScrollY < disY ) {
+                this.msgScroll.scrollTo(-this.msgsScrollY, -disY, 0);
+            }
+        }
     }
     showChatContent(chatContent) {
-        const fromUserID = this.props.user._id;// 发送消息的ID
+        const fromUserID = this.props._id;// 发送消息的ID
         const toUserID = this.props.match.params.chatWith;// 接收消息的ID
         // 获取对方信息
         let toInfo = null;
-        this.props.chatList.list.forEach(item => {
+        this.props.list.forEach(item => {
             if(item._id === toUserID) {
                 toInfo = {
                     username: item.username,
@@ -98,7 +116,7 @@ class Chat extends Component {
                             return <Item
                                 key={index}
                                 className="my-content"
-                                extra={<img src={this.props.user.avatar} alt="img" />}
+                                extra={<img src={this.props.avatar} alt="img" />}
                             >{msg.text}</Item>
                         } else {
                             return <Item
@@ -113,17 +131,11 @@ class Chat extends Component {
 
     }
     render(){
+        console.log('chat 组件 render 中。。。');
         return (
             <div>
-                {this.showChatContent(this.props.chat.chatmsgs)}
-                <List className="msg-edit">
-                    <InputItem
-                        value={this.state.text} /*重要，双向绑定*/
-                        onChange={v => this.setState({text: v})}
-                        extra={<Button type="primary" onClick={()=>this.handleSubmit()}>发送</Button>}
-                        placeholder="请输入聊天内容"
-                    />
-                </List>
+                {this.showChatContent(this.props.chatmsgs)}
+                <ChatInput fromUserID={this.props._id} toUserID={this.props.match.params.chatWith} />
             </div>
         );
     }

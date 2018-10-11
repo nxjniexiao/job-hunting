@@ -5,7 +5,6 @@ import {WhiteSpace} from 'antd-mobile';
 import UserList from '../../components/user-list/user-list';
 
 class Genius extends Component {
-
     render() {
         return (
             <div>
@@ -19,5 +18,5 @@ const mapStateToProps = state => {
     return {
         chatList: state.chatList.list
     }
-}
+};
 export default connect(mapStateToProps)(Genius);

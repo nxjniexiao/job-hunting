@@ -15,7 +15,22 @@ import {receiveMsg, getMsg} from "../../actions/actions-chat";
 
 @withRouter
 @connect(
-    state => state,
+    state => {
+        let unreadMsgs = 0;// 未读消息数量
+        const fromUserID = state.user._id;
+        state.chat.chatmsgs.forEach((msg) => {
+            if (msg.toUserID === fromUserID && msg.isRead === false) {
+                unreadMsgs++;
+            }
+        });
+        return {
+            _id: state.user._id,
+            type: state.user.type,
+            isOnline: state.chat.isOnline,
+            chatMsgsLength: state.chat.chatmsgs.length,
+            unreadMsgs
+        }
+    },
     dispatch => {
         return {
             getMsg: () => dispatch(getMsg()),
@@ -25,35 +40,33 @@ import {receiveMsg, getMsg} from "../../actions/actions-chat";
     }
 )
 class Dashboard extends Component {
-    componentWillMount () {
-        console.log('== Dashboard 组件即将挂载');
+    componentWillMount() {
         this.props.getList();// 后端根据_id获取type
-        // if(this.props.chatList.list.length === 0) {
-        //     this.props.getList();// 后端根据_id获取type
-        // }
-        if(!this.props.chat.isOnline) {
-            const fromUserID = this.props.user._id;// 发送消息的ID
+        if (!this.props.isOnline) {
+            const fromUserID = this.props._id;// 发送消息的ID
             this.props.receiveMsg(fromUserID);
         }
-        if(this.props.chat.chatmsgs.length === 0){
+        if (this.props.chatMsgsLength === 0) {
             this.props.getMsg();
         }
     }
     componentDidMount() {
-        // 中间内容区域滚动(异步问题)
+        // 中间内容区域滚动
         const contentWrapper = document.querySelector('.content-wrapper');
-        if(contentWrapper){
+        if (contentWrapper) {
             new BScroll(contentWrapper, {click: true});
         }
     }
-    componentWillUpdate() {
-        console.log('== Dashboard 组件即将更新');
-    }
-    componentDidUpdate() {
-        console.log('== Dashboard 组件已经更新');
+    // 减少 render 次数
+    shouldComponentUpdate(nextProps, nextState) {
+        return (
+            this.props.location.pathname !== nextProps.location.pathname ||
+            this.props.unreadMsgs !== nextProps.unreadMsgs ||
+            this.props.chatMsgsLength !== nextProps.chatMsgsLength);
     }
     render() {
-        const type = this.props.user.type;
+        console.log('dashboard 组件 render中。。。');
+        const type = this.props.type;
         const navList = [
             {
                 title: '牛人列表',
@@ -91,25 +104,17 @@ class Dashboard extends Component {
                 title = item.title;
             }
         });
-        // 未读消息数量
-        const fromUserID = this.props.user._id;// 发送消息的ID
-        let unreadMsgs = 0;
-            this.props.chat.chatmsgs.forEach((msg) => {
-                if(msg.toUserID === fromUserID && msg.isRead === false){
-                    unreadMsgs++;
-                }
-            });
         return (
             <div>
                 <NavBar className="fixed-header">{title}</NavBar>
                 <div className="content-wrapper">
                     <div className="content">
                         {filteredNavList.map((list, index) => (
-                            <Route key={index} path={list.path} component={list.component} />
+                            <Route key={index} path={list.path} component={list.component}/>
                         ))}
                     </div>
                 </div>
-                <NavLink filteredNavList={filteredNavList} unreadMsgs={unreadMsgs}/>
+                <NavLink filteredNavList={filteredNavList} unreadMsgs={this.props.unreadMsgs}/>
             </div>
         );
     }

@@ -5,9 +5,29 @@ import {List, Badge} from 'antd-mobile';
 const Item = List.Item;
 const Brief = Item.Brief;
 @connect(
-    state => state
+    state => {
+        let unreadMsgs = 0;// 未读消息数量
+        const fromUserID = state.user._id;
+        state.chat.chatmsgs.forEach((msg) => {
+            if (msg.toUserID === fromUserID && msg.isRead === false) {
+                unreadMsgs++;
+            }
+        });
+        return {
+            _id: state.user._id,
+            chatmsgs: state.chat.chatmsgs,
+            list: state.chatList.list,
+            unreadMsgs
+        }
+    }
 )
 class Message extends Component {
+    shouldComponentUpdate(nextProps, nextState) {
+        return (
+            this.props.chatmsgs.length !== nextProps.chatmsgs.length ||
+            this.props.unreadMsgs !== nextProps.unreadMsgs
+        );
+    }
     getTime(createTime){
         function fixedPre(num, pre){
             return ('000000000' + num).slice(-pre);
@@ -48,7 +68,7 @@ class Message extends Component {
         if(msgList.length === 0 || userList.length === 0) {
             return null;
         }
-        const fromUserID = this.props.user._id;
+        const fromUserID = this.props._id;
         // 筛选出别人发给自己的消息
         const toMsgList = msgList.filter(list => list.fromUserID !== fromUserID);
         // 按发送用户分类
@@ -85,7 +105,6 @@ class Message extends Component {
             {this.renderMessage(readMsgUserList, msg, userList)}
         </div>)
     }
-
     renderMessage(msgList, msg, userList,) {
         return msgList.map(id => {
             return (
@@ -107,8 +126,9 @@ class Message extends Component {
         });
     }
     render() {
-        const msgList = this.props.chat.chatmsgs;
-        const userList = this.props.chatList.list;
+        console.log('message 组件 render 中。。。');
+        const msgList = this.props.chatmsgs;
+        const userList = this.props.list;
         return (
             <div>
                 {(msgList && userList) ? this.sortMessage(msgList, userList) : ''}

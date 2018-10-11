@@ -22,6 +22,10 @@ const alert = Modal.alert;
     }
 )
 class My extends Component {
+    shouldComponentUpdate(nextProps, nextState) {
+        // 虽然 return false，但父组件 Dashboard 的 render 会导致此组件 render。
+        return false;
+    }
     logout() {
         alert('退出登录', '', [
             { text: '取消', onPress: () => {} },
@@ -68,6 +72,8 @@ class My extends Component {
         }
     }
     render() {
+        console.log('my 组件 render 中。。。');
+        console.log(this.props);
         const currPath = this.props.location.pathname;
         const redirect = (this.props.user.redirectPath && (this.props.user.redirectPath !== currPath));
         return (<div>

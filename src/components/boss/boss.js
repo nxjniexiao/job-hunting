@@ -5,7 +5,6 @@ import {WhiteSpace} from 'antd-mobile';
 import UserList from '../../components/user-list/user-list';
 
 class Boss extends Component {
-
     render() {
         return (
             <div>
